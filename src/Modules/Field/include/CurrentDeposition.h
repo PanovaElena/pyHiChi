@@ -31,7 +31,7 @@ namespace pfc
         void operator()(TGrid* grid, T_ParticleArray* particleArray) {
             typedef typename T_ParticleArray::ParticleProxyType ParticleProxyType;
             grid->zeroizeJ();
-#pragma omp parallel for
+//#pragma omp parallel for
             for (int i = 0; i < particleArray->size(); i++) {
                 ParticleProxyType particle = (*particleArray)[i];
                 static_cast<DerivedClass*>(this)->depositOneParticle(grid, &particle);
@@ -41,7 +41,7 @@ namespace pfc
 
         template<class T_Particle>
         void depositOneParticle(TGrid* grid, T_Particle* particle) {
-            //static_assert(false, "ERROR: CurrentDeposition::depositOneParticle shouldn't be called");
+            static_assert(false, "ERROR: CurrentDeposition::depositOneParticle shouldn't be called");
         }
 
     protected:
@@ -85,9 +85,14 @@ namespace pfc
             FP3 current = (particle->getVelocity() * particle->getCharge() * particle->getWeight()) /
                 grid->steps.volume();
 
-            grid->getIndexEJx(particlePosition, idxJx, internalCoordsJx);
-            grid->getIndexEJy(particlePosition, idxJy, internalCoordsJy);
-            grid->getIndexEJz(particlePosition, idxJz, internalCoordsJz);
+            idxJx = grid->getIndexJx(particlePosition);
+            internalCoordsJx = grid->getInternalCoordsJx(particlePosition);
+
+            idxJy = grid->getIndexJy(particlePosition);
+            internalCoordsJy = grid->getInternalCoordsJy(particlePosition);
+
+            idxJz = grid->getIndexJz(particlePosition);
+            internalCoordsJz = grid->getInternalCoordsJz(particlePosition);
 
             FormFactorCIC formFactor;
             formFactor(internalCoordsJx);
@@ -139,11 +144,14 @@ namespace pfc
             FP3 current = (particle->getVelocity() * particle->getCharge() * particle->getWeight()) /
                 grid->steps.volume();
 
+            idxJx = grid->getClosestIndexJx(particlePosition);
+            internalCoordsJx = grid->getClosestInternalCoordsJx(particlePosition);
 
-            grid->getIndexEJxTSC(particlePosition, idxJx, internalCoordsJx);
-            grid->getIndexEJyTSC(particlePosition, idxJy, internalCoordsJy);
-            grid->getIndexEJzTSC(particlePosition, idxJz, internalCoordsJz);
+            idxJy = grid->getClosestIndexJy(particlePosition);
+            internalCoordsJy = grid->getClosestInternalCoordsJy(particlePosition);
 
+            idxJz = grid->getClosestIndexJz(particlePosition);
+            internalCoordsJz = grid->getClosestInternalCoordsJz(particlePosition);
             FormFactorTSC formFactor;
             formFactor(internalCoordsJx);
 #pragma omp critical (TSCJx)

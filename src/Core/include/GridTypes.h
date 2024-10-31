@@ -34,12 +34,6 @@ namespace pfc {
     template <GridTypes gridTypes>
     struct LabelMethodRequiredNumberOfExternalCells {
         static const int numExternalCells = (gridTypes == GridTypes::YeeGridType ||
-            gridTypes == GridTypes::StraightGridType) ? 1 : 0;
-    };
-
-    template <GridTypes gridTypes>
-    struct LabelMethodRequiredNumberOfExternalCells {
-        static const int numExternalCells = (gridTypes == GridTypes::YeeGridType ||
             gridTypes == GridTypes::StraightGridType) ? 2 : 0;
     };
 
