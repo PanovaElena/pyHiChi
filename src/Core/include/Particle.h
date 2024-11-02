@@ -72,13 +72,13 @@ namespace pfc {
             this->setType(particleProxy.getType());
         }
 
-        /*Particle(ParticleProxy<dimension> particleProxy)
+        Particle(ParticleProxy<dimension> particleProxy)
         {
             this->setPosition(particleProxy.getPosition());
             this->setP(particleProxy.getP());
             this->setWeight(particleProxy.getWeight());
             this->setType(particleProxy.getType());
-        }*/
+        }
 
         //PositionTypeProxy& getProxyPosition() { return PositionTypeProxy(position); } //only advanced users
         PositionType getPosition() const { return position; }
